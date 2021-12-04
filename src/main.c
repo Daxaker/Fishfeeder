@@ -38,6 +38,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "stm32f1xx_hal.h"
 
 /* USER CODE BEGIN Includes */
 #include "lcd1602_i2c_lib.h"
@@ -128,11 +129,11 @@ int main(void)
       HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
       uint8_t sec = currTime.Seconds;
       if(!(sec % 2)){
-        TIM2->CCR1 = 2048;
+        TIM2->CCR1 = 16384;
       }
       else
       {
-        TIM2->CCR1 = 4096;
+        TIM2->CCR1 = 32768;
       }
       sprintf((char*)timeStr, "%02d:%02d:%02d", currTime.Hours, currTime.Minutes, sec);
       lcd1602_Print_text(timeStr);
@@ -276,9 +277,9 @@ static void MX_TIM2_Init(void)
   TIM_OC_InitTypeDef sConfigOC;
 
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 8;
+  htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4096;
+  htim2.Init.Period = 65535;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
